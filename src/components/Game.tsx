@@ -1,12 +1,17 @@
-import shedIcon from '../assets/icons/shed.svg';
+import { useState } from 'react';
+import ResourcePanel from './ResourcePanel';
 
 const Game = () => {
+  const [survivor, setSurvivor] = useState(0);
+  const [availableSurvivor, setAvailableSurvivor] = useState(0);
+  const [meat, setMeat] = useState(0);
+  const [wood, setWood] = useState(0);
+  const [stone, setStone] = useState(0);
 
-    return (
-        <nav className="w-full h-full flex flex-col justify-center items-center bg-blue-300">
-            <img className="w-16 rotate-8" src={shedIcon} alt="Shed Icon" />
-            <h1 className='text-white font-bold text-6xl'>Affichage du jeux</h1>
-        </nav>
-    )
-}
-export default Game
+  return (
+    <>
+      <ResourcePanel survivor={survivor} availableSurvivor={availableSurvivor} meat={meat} wood={wood} stone={stone} />
+    </>
+  );
+};
+export default Game;
