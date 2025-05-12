@@ -19,7 +19,7 @@ interface ResourcePanelProps {
 
 const ResourcePanel: FC<ResourcePanelProps> = ({ survivor, availableSurvivor, meat, wood, stone }) => {
   return (
-    <div className="bg-blue-200 p-4">
+    <div className="bg-blue-200 p-4 w-full  ">
       <ul className="flex items-center bg-blue-300 p-4 rounded-2xl border-2 border-blue-400 gap-8">
         <li className={StyleResource.li}>
           <img className="w-16" src={survivorIcon} alt="Survivor Icon" />
