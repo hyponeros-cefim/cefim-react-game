@@ -1,6 +1,6 @@
 import shedIcon from '../assets/icons/shed.svg';
 
-const Menu = ({ version }: { version: string }) => {
+const Menu = ({ version, onPlay }: { version: string, onPlay: () => void }) => {
     const sentences = [
         "Seuls les plus malins survivront. ",
         "Bâtissez. Luttez. Survivez.",
@@ -24,7 +24,7 @@ const Menu = ({ version }: { version: string }) => {
             <h1 className='text-white font-bold text-6xl'>Survice React</h1>
             <h2 className='rotate-5 ml-16 mb-8 text-white animate-pulse' >{subtitle}</h2>
             <div className='flex flex-col items-stretch max-w-md gap-2 my-4' >
-                <button className='bg-white rounded px-4 py-2 w-32' >Play</button>
+                <button className='bg-white rounded px-4 py-2 w-32' onClick={onPlay} >Play</button>
                 <button className='bg-white rounded px-4 py-2 w-32' onClick={handleClick}>Credits</button>
                 <p className='text-white text-center' >v. {version}</p>
             </div>
