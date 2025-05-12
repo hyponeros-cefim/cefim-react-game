@@ -6,7 +6,7 @@ import type { FC } from 'react';
 
 const StyleResource = {
   li: 'flex items-center gap-2',
-  p: 'text-blue-400 text-3xl font-bold bg-white rounded-2xl  pt-0.5 pb-1 px-4',
+  p: 'text-white text-3xl font-bold bg-gray-800 rounded-2xl  pt-0.5 pb-1 px-4',
 };
 
 interface ResourcePanelProps {
@@ -19,8 +19,8 @@ interface ResourcePanelProps {
 
 const ResourcePanel: FC<ResourcePanelProps> = ({ survivor, availableSurvivor, meat, wood, stone }) => {
   return (
-    <div className="bg-blue-200 p-4 w-full  ">
-      <ul className="flex items-center bg-blue-300 p-4 rounded-2xl border-2 border-blue-400 gap-8">
+    <div className="bg-gray-800 border-gray-700 p-4 w-full  ">
+      <ul className="flex items-center bg-gray-600 p-4 rounded-2xl border-2 border-gray-700 gap-8">
         <li className={StyleResource.li}>
           <img className="w-16" src={survivorIcon} alt="Survivor Icon" />
           <p className={StyleResource.p}>{`${survivor}/${availableSurvivor}`}</p>

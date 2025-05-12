@@ -1,3 +1,5 @@
+import { CircleCheckBigIcon, SquircleIcon } from 'lucide-react';
+
 interface Quest {
   id: number;
   state: boolean;
@@ -15,14 +17,14 @@ const QuestList = () => {
 
   function renderQuest(quest: Quest) {
     return (
-      <li key={quest.id} className={'flex items-center w-full p-4 gap-2'}>
-        <input type="checkbox" checked={quest.state} />
-        <div className="flex flex-col items-start gap-2">
-          <p className="text-black text-2xl font-bold bg-blue-200 rounded-2xl pt-0.5 pb-1 px-4">{quest.name}</p>
-          <p className="text-black text-base font-normal bg-blue-200 rounded-2xl pt-0.5 pb-1 px-4">
-            {quest.description}
-          </p>
-        </div>
+      <li key={quest.id}>
+        <button className="flex items-center cursor-pointer w-full p-3 text-base font-bold  rounded-lg group hover:shadow bg-gray-600 hover:bg-gray-500 text-white">
+          {quest.state ? <CircleCheckBigIcon color="#00ff00" /> : <SquircleIcon color="#c0c7c0" />}
+          <div className="flex flex-col items-start gap-2">
+            <span className="flex-1 ms-3 whitespace-nowrap">{quest.name}</span>
+            <span className="flex-1 ms-3  text-gray-300 font-medium ">{quest.description}</span>
+          </div>
+        </button>
       </li>
     );
   }
@@ -33,11 +35,10 @@ const QuestList = () => {
   // Afficher la prochaine quête à valider
 
   return (
-    <div className="flex items-center justify-end">
-      <div className="bg-blue-200 p-4 flex items-center justify-center w-1/3">
-        <ul className="flex flex-col items-center bg-blue-300 rounded-2xl border-2 border-blue-400 w-full">
-          {questList.map((quest) => renderQuest(quest))}
-        </ul>
+    <div className="flex justify-end m-4">
+      <div className="w-full max-w-sm p-4 border rounded-lg shadow-sm sm:p-6 bg-gray-800 border-gray-700">
+        <h5 className="mb-3 text-base font-semibold  md:text-xl text-white">Liste des quêtes</h5>
+        <ul className="my-4 space-y-3">{questList.map((quest) => renderQuest(quest))}</ul>
       </div>
     </div>
   );
