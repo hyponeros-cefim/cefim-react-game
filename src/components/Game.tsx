@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import ResourcePanel from './ResourcePanel';
 import QuestList from './QuestList';
 import type { IQuest } from './types/IQuestList';
+import { CellType, type ICell } from './types/IMap';
+import Map from './Map';
 
 const Game = () => {
   const questList: IQuest[] = [
@@ -17,42 +19,44 @@ const Game = () => {
     { id: 10, state: false, name: 'Trouver un abri', description: 'Description of Quest 10' },
   ];
 
-  const line1 = [
-    { id: 1, type: 'empty' },
-    { id: 2, type: 'empty' },
-    { id: 3, type: 'empty' },
-    { id: 4, type: 'empty' },
-    { id: 5, type: 'empty' },
+  const row1: ICell[] = [
+    { type: CellType.EMPTY },
+    { type: CellType.EMPTY },
+    { type: CellType.EMPTY },
+    { type: CellType.EMPTY },
+    { type: CellType.EMPTY },
   ];
-  const line2 = [
-    { id: 6, type: 'empty' },
-    { id: 7, type: 'empty' },
-    { id: 8, type: 'empty' },
-    { id: 9, type: 'empty' },
-    { id: 10, type: 'empty' },
+  const row2: ICell[] = [
+    { type: CellType.EMPTY },
+    { type: CellType.EMPTY },
+    { type: CellType.EMPTY },
+    { type: CellType.EMPTY },
+    { type: CellType.EMPTY },
   ];
-  const line3 = [
-    { id: 11, type: 'empty' },
-    { id: 12, type: 'empty' },
-    { id: 13, type: 'empty' },
-    { id: 14, type: 'empty' },
-    { id: 15, type: 'empty' },
+  const row3: ICell[] = [
+    { type: CellType.EMPTY },
+    { type: CellType.EMPTY },
+    { type: CellType.EMPTY },
+    { type: CellType.EMPTY },
+    { type: CellType.EMPTY },
   ];
-  const line4 = [
-    { id: 16, type: 'empty' },
-    { id: 17, type: 'empty' },
-    { id: 18, type: 'empty' },
-    { id: 19, type: 'empty' },
-    { id: 20, type: 'empty' },
+  const row4: ICell[] = [
+    { type: CellType.EMPTY },
+    { type: CellType.EMPTY },
+    { type: CellType.EMPTY },
+    { type: CellType.EMPTY },
+    { type: CellType.EMPTY },
   ];
-  const line5 = [
-    { id: 21, type: 'empty' },
-    { id: 22, type: 'empty' },
-    { id: 23, type: 'empty' },
-    { id: 24, type: 'empty' },
-    { id: 25, type: 'empty' },
+  const row5: ICell[] = [
+    { type: CellType.EMPTY },
+    { type: CellType.EMPTY },
+    { type: CellType.EMPTY },
+    { type: CellType.EMPTY },
+    { type: CellType.EMPTY },
   ];
-  const cells = [line1, line2, line3, line4, line5];
+  const cellList = [row1, row2, row3, row4, row5];
+
+  const [cells, setCells] = useState<ICell[][]>(cellList);
 
   const [survivor, setSurvivor] = useState(0);
   const [availableSurvivor, setAvailableSurvivor] = useState(0);
@@ -79,10 +83,19 @@ const Game = () => {
   };
 
   return (
-    <>
-      <ResourcePanel survivor={survivor} availableSurvivor={availableSurvivor} meat={meat} wood={wood} stone={stone} />
-      <QuestList quests={quests} onValidateQuest={onValidateQuest} />
-    </>
+    <div className="w-full h-full flex flex-col justify-start items-center bg-blue-50 p-2">
+      <div className="flex items-start w-full gap-2">
+        <ResourcePanel
+          survivor={survivor}
+          availableSurvivor={availableSurvivor}
+          meat={meat}
+          wood={wood}
+          stone={stone}
+        />
+        <QuestList quests={quests} onValidateQuest={onValidateQuest} />
+      </div>
+      <Map cells={cells} />
+    </div>
   );
 };
 export default Game;
