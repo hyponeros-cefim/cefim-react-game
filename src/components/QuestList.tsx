@@ -1,9 +1,9 @@
 import { CircleCheckBigIcon, SquircleIcon } from 'lucide-react';
 import type { FC } from 'react';
-import type { Quest } from './Game';
+import type { IQuest } from './types/IQuestList';
 
 interface QuestListProps {
-  quests: Quest[];
+  quests: IQuest[];
   onValidateQuest: (id: number) => void;
 }
 
@@ -14,7 +14,7 @@ const QuestList: FC<QuestListProps> = ({ quests, onValidateQuest }) => {
   // Garder toutes les quêtes au-delà de la dernière quête validée (ou depuis le début si aucune quête n'est validée) et ne garder que les 3 premières quêtes
   const questsFilterd = quests.filter((quest) => quest.id >= (lastQuest ? lastQuest.id : 0)).slice(0, 3);
 
-  function renderQuest(quest: Quest) {
+  function renderQuest(quest: IQuest) {
     const { id, name, description, state } = quest;
     return (
       <li key={id}>
