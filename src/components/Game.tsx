@@ -37,17 +37,6 @@ const Game = () => {
     setQuests(prevQuests);
   };
 
-  //? Déconseiller de modifier l'état directement dans le tableau d'origine, car cela peut entraîner des problèmes de performance et de prévisibilité dans React. Il est préférable de créer une nouvelle référence pour le tableau d'état.
-  //   const onValidateQuest = (id: number) => {
-  //   const prevQuests = quests.map((quest) => {
-  //     if (quest.id === id) {
-  //       quest.state = !quest.state; // Modification directe
-  //     }
-  //     return quest; // Retourne l'objet modifié ou non
-  //   });
-  //   setQuests([...prevQuests]); // Crée une nouvelle référence pour le tableau
-  // };
-
   return (
     <>
       <ResourcePanel survivor={survivor} availableSurvivor={availableSurvivor} meat={meat} wood={wood} stone={stone} />
