@@ -9,6 +9,8 @@ const Game = () => {
   const [wood, setWood] = useState(0);
   const [stone, setStone] = useState(0);
 
+  // TODO: récupérer onValidateQuest à passer à QuestList => vérifier sur le corrigé
+
   return (
     <>
       <ResourcePanel survivor={survivor} availableSurvivor={availableSurvivor} meat={meat} wood={wood} stone={stone} />
