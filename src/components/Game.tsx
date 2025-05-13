@@ -54,10 +54,8 @@ const Game = () => {
   ];
   const cells = [line1, line2, line3, line4, line5];
 
-  // const [survivor, setSurvivor] = useState(0);
   const [survivor, setSurvivor] = useState(0);
   const [availableSurvivor, setAvailableSurvivor] = useState(0);
-  // const [meat, setMeat] = useState(0);
   const [meat, setMeat] = useState(0);
   const [wood, setWood] = useState(0);
   const [stone, setStone] = useState(0);
@@ -74,13 +72,6 @@ const Game = () => {
     // Nettoyage pour éviter les doublons
     return () => clearInterval(intervalId);
   }, []);
-
-  // const [life, setLife] = useState(100);
-  // useEffect(() => {
-  //   if (life <= 0) {
-  //     setLife(0);
-  //   }
-  // }, [life]);
 
   const onValidateQuest = (id: number) => {
     const prevQuests = quests.map((quest) => (quest.id === id ? { ...quest, state: !quest.state } : quest));
