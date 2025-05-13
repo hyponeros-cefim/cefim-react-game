@@ -1,51 +1,18 @@
 import { CircleCheckBigIcon, SquircleIcon } from 'lucide-react';
-import { useState } from 'react';
+import type { FC } from 'react';
+import type { Quest } from './Game';
 
-interface Quest {
-  id: number;
-  state: boolean;
-  name: string;
-  description: string;
+interface QuestListProps {
+  quests: Quest[];
+  onValidateQuest: (id: number) => void;
 }
 
-const QuestList = () => {
-  const questList: Quest[] = [
-    { id: 1, state: true, name: 'Une bonne nuit de sommeil', description: 'Description of Quest 1' },
-    { id: 2, state: true, name: 'Chasser des lapins', description: 'Description of Quest 2' },
-    { id: 3, state: false, name: 'Miner de la pierre', description: 'Description of Quest 3' },
-    { id: 4, state: false, name: 'Couper du bois', description: 'Description of Quest 4' },
-    { id: 5, state: false, name: 'Pêcher du poisson', description: 'Description of Quest 5' },
-    { id: 6, state: false, name: 'Construire un abri', description: 'Description of Quest 6' },
-    { id: 7, state: false, name: 'Trouver de la nourriture', description: 'Description of Quest 7' },
-    { id: 8, state: false, name: 'Explorer la forêt', description: 'Description of Quest 8' },
-    { id: 9, state: false, name: 'Construire un feu de camp', description: 'Description of Quest 9' },
-    { id: 10, state: false, name: 'Trouver un abri', description: 'Description of Quest 10' },
-  ];
-  const [quests, setQuests] = useState<Quest[]>(questList);
-
+const QuestList: FC<QuestListProps> = ({ quests, onValidateQuest }) => {
   // Trouver la dernière quête validée
   const lastQuest = [...quests].reverse().find((quest) => quest.state);
 
   // Garder toutes les quêtes au-delà de la dernière quête validée (ou depuis le début si aucune quête n'est validée) et ne garder que les 3 premières quêtes
   const questsFilterd = quests.filter((quest) => quest.id >= (lastQuest ? lastQuest.id : 0)).slice(0, 3);
-
-  // Rendre cliquable que la première quête
-
-  const onValidateQuest = (id: number) => {
-    const prevQuests = quests.map((quest) => (quest.id === id ? { ...quest, state: !quest.state } : quest));
-    setQuests(prevQuests);
-  };
-
-  //? Déconseiller de modifier l'état directement dans le tableau d'origine, car cela peut entraîner des problèmes de performance et de prévisibilité dans React. Il est préférable de créer une nouvelle référence pour le tableau d'état.
-  //   const onValidateQuest = (id: number) => {
-  //   const prevQuests = quests.map((quest) => {
-  //     if (quest.id === id) {
-  //       quest.state = !quest.state; // Modification directe
-  //     }
-  //     return quest; // Retourne l'objet modifié ou non
-  //   });
-  //   setQuests([...prevQuests]); // Crée une nouvelle référence pour le tableau
-  // };
 
   function renderQuest(quest: Quest) {
     const { id, name, description, state } = quest;
