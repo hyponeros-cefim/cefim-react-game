@@ -1,74 +1,33 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ResourcePanel from './ResourcePanel';
 import QuestList from './QuestList';
 import type { IQuest } from './types/IQuestList';
 import { CellType, type ICell } from './types/IMap';
 import Map from './Map';
+import { cellList } from '../data/cellList';
+import { questList } from '../data/questList';
 
 const Game = () => {
-  const questList: IQuest[] = [
-    { id: 1, state: true, name: 'Une bonne nuit de sommeil', description: 'Description of Quest 1' },
-    { id: 2, state: true, name: 'Chasser des lapins', description: 'Description of Quest 2' },
-    { id: 3, state: false, name: 'Miner de la pierre', description: 'Description of Quest 3' },
-    { id: 4, state: false, name: 'Couper du bois', description: 'Description of Quest 4' },
-    { id: 5, state: false, name: 'Pêcher du poisson', description: 'Description of Quest 5' },
-    { id: 6, state: false, name: 'Construire un abri', description: 'Description of Quest 6' },
-    { id: 7, state: false, name: 'Trouver de la nourriture', description: 'Description of Quest 7' },
-    { id: 8, state: false, name: 'Explorer la forêt', description: 'Description of Quest 8' },
-    { id: 9, state: false, name: 'Construire un feu de camp', description: 'Description of Quest 9' },
-    { id: 10, state: false, name: 'Trouver un abri', description: 'Description of Quest 10' },
-  ];
-
-  const row1: ICell[] = [
-    { type: CellType.EMPTY },
-    { type: CellType.EMPTY },
-    { type: CellType.EMPTY },
-    { type: CellType.EMPTY },
-    { type: CellType.EMPTY },
-  ];
-  const row2: ICell[] = [
-    { type: CellType.EMPTY },
-    { type: CellType.EMPTY },
-    { type: CellType.EMPTY },
-    { type: CellType.EMPTY },
-    { type: CellType.EMPTY },
-  ];
-  const row3: ICell[] = [
-    { type: CellType.EMPTY },
-    { type: CellType.EMPTY },
-    { type: CellType.EMPTY },
-    { type: CellType.EMPTY },
-    { type: CellType.EMPTY },
-  ];
-  const row4: ICell[] = [
-    { type: CellType.EMPTY },
-    { type: CellType.EMPTY },
-    { type: CellType.EMPTY },
-    { type: CellType.EMPTY },
-    { type: CellType.EMPTY },
-  ];
-  const row5: ICell[] = [
-    { type: CellType.EMPTY },
-    { type: CellType.EMPTY },
-    { type: CellType.EMPTY },
-    { type: CellType.EMPTY },
-    { type: CellType.EMPTY },
-  ];
-  const cellList = [row1, row2, row3, row4, row5];
-
-  const [cells, setCells] = useState<ICell[][]>(cellList);
-
   const [survivor, setSurvivor] = useState(0);
-  const [availableSurvivor, setAvailableSurvivor] = useState(0);
-  const [meat, setMeat] = useState(0);
-  const [wood, setWood] = useState(0);
+  const [population, setPopulation] = useState(0);
+  const [meat, setMeat] = useState(20);
+  const [wood, setWood] = useState(17);
   const [stone, setStone] = useState(0);
   const [quests, setQuests] = useState<IQuest[]>(questList);
+  const [cells, setCells] = useState<ICell[][]>(cellList);
+
+  // Créer une ref de population pour éviter les re-renders
+  const populationRef = useRef(population);
+
+  //A chaque mise à jour de population, on met à jour la ref
+  useEffect(() => {
+    populationRef.current = population;
+  }, [population]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       setMeat((prevMeat) => {
-        const newMeat = prevMeat - 1;
+        const newMeat = prevMeat - (populationRef.current > 0 ? 1 * populationRef.current : 0); // Consomme 1 viande par survivant disponible
         return newMeat > 0 ? newMeat : 0; // Empêche meat de devenir négatif
       });
     }, 1000);
@@ -82,19 +41,39 @@ const Game = () => {
     setQuests(prevQuests);
   };
 
+  const handleUpdateCell = (cellId: number) => {
+    /// Recherche de la cellule cliquée
+    const clickedCell = cells.flat().find((cell) => cell.id === cellId);
+    if (!clickedCell) {
+      return;
+    }
+
+    // Si déjà occupée, on ne fait rien
+    if (clickedCell.type !== CellType.EMPTY) {
+      return;
+    }
+
+    // Si pas assez de bois, on ne fait rien
+    if (wood < 5) {
+      console.log('Pas assez de bois pour construire !');
+      return;
+    }
+
+    // Sinon, on consomme le bois et on reconstruit le tableau
+    setWood(wood - 5);
+    setPopulation(population + 2);
+    setCells((prev) =>
+      prev.map((row) => row.map((cell) => (cell.id === cellId ? { ...cell, type: CellType.HOUSE } : cell)))
+    );
+  };
+
   return (
     <div className="w-full h-full flex flex-col justify-start items-center bg-blue-50 p-2">
       <div className="flex items-start w-full gap-2">
-        <ResourcePanel
-          survivor={survivor}
-          availableSurvivor={availableSurvivor}
-          meat={meat}
-          wood={wood}
-          stone={stone}
-        />
+        <ResourcePanel survivor={survivor} population={population} meat={meat} wood={wood} stone={stone} />
         <QuestList quests={quests} onValidateQuest={onValidateQuest} />
       </div>
-      <Map cells={cells} />
+      <Map cells={cells} onUpdateCell={handleUpdateCell} />
     </div>
   );
 };
