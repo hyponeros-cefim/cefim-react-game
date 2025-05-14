@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type FC } from 'react';
 import ResourcePanel from './ResourcePanel';
 import QuestList from './QuestList';
 import type { IQuest } from './types/IQuestList';
@@ -7,7 +7,11 @@ import Map from './Map';
 import { cellList } from '../data/cellList';
 import { questList } from '../data/questList';
 
-const Game = () => {
+interface IGameProps {
+  onGameOver: () => void;
+}
+
+const Game: FC<IGameProps> = ({ onGameOver }) => {
   const [survivor, setSurvivor] = useState(0);
   const [population, setPopulation] = useState(0);
   const [meat, setMeat] = useState(20);
@@ -15,6 +19,7 @@ const Game = () => {
   const [stone, setStone] = useState(0);
   const [quests, setQuests] = useState<IQuest[]>(questList);
   const [cells, setCells] = useState<ICell[][]>(cellList);
+  const [time, setTime] = useState(0);
 
   // Créer une ref de population pour éviter les re-renders
   const populationRef = useRef(population);
@@ -25,7 +30,8 @@ const Game = () => {
   }, [population]);
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
+    const interval = setInterval(() => {
+      setTime((prevTime) => prevTime + 1); // Incrémente le temps
       setMeat((prevMeat) => {
         const newMeat = prevMeat - (populationRef.current > 0 ? 1 * populationRef.current : 0); // Consomme 1 viande par survivant disponible
         return newMeat > 0 ? newMeat : 0; // Empêche meat de devenir négatif
@@ -33,8 +39,16 @@ const Game = () => {
     }, 1000);
 
     // Nettoyage pour éviter les doublons
-    return () => clearInterval(intervalId);
+    return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (meat <= 0) {
+      // Appelle une fonction ou déclenche une alerte
+      alert("Il n'y a plus de nourriture ! La partie est terminée !");
+      onGameOver();
+    }
+  }, [meat, onGameOver]);
 
   const onValidateQuest = (id: number) => {
     const prevQuests = quests.map((quest) => (quest.id === id ? { ...quest, state: !quest.state } : quest));
@@ -68,7 +82,7 @@ const Game = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col justify-start items-center bg-blue-50 p-2">
+    <div className="w-full h-full flex flex-col justify-start items-center bg-gray-500 p-2">
       <div className="flex items-start w-full gap-2">
         <ResourcePanel survivor={survivor} population={population} meat={meat} wood={wood} stone={stone} />
         <QuestList quests={quests} onValidateQuest={onValidateQuest} />
