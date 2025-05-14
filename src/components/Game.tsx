@@ -6,41 +6,38 @@ import { CellType, type ICell } from './types/IMap';
 import Map from './Map';
 import { cellList } from '../data/cellList';
 import { questList } from '../data/questList';
+import { useResources } from '../Store/useResources';
 
 interface IGameProps {
   onGameOver: () => void;
 }
 
 const Game: FC<IGameProps> = ({ onGameOver }) => {
-  const [survivor, setSurvivor] = useState(0);
-  const [population, setPopulation] = useState(0);
-  const [meat, setMeat] = useState(20);
-  const [wood, setWood] = useState(17);
-  const [stone, setStone] = useState(0);
+  const { meat, eatMeat, population, increasePopulation, wood, buildCaban } = useResources();
+
   const [quests, setQuests] = useState<IQuest[]>(questList);
   const [cells, setCells] = useState<ICell[][]>(cellList);
   const [time, setTime] = useState(0);
 
   // Créer une ref de population pour éviter les re-renders
   const populationRef = useRef(population);
+  const meatRef = useRef(meat);
 
   //A chaque mise à jour de population, on met à jour la ref
   useEffect(() => {
     populationRef.current = population;
-  }, [population]);
+    meatRef.current = meat;
+  }, [population, meat]);
 
+  // TODO: A voir pour mettre le calcul le store dans une méthode increasePopulation, increaseTime, decreaseMeat, decreaseWood ??
   useEffect(() => {
     const interval = setInterval(() => {
       setTime((prevTime) => prevTime + 1); // Incrémente le temps
-      setMeat((prevMeat) => {
-        const newMeat = prevMeat - (populationRef.current > 0 ? 1 * populationRef.current : 0); // Consomme 1 viande par survivant disponible
-        return newMeat > 0 ? newMeat : 0; // Empêche meat de devenir négatif
-      });
+      eatMeat(meat); // Empêche meat de devenir négatif
     }, 1000);
 
-    // Nettoyage pour éviter les doublons
     return () => clearInterval(interval);
-  }, []);
+  }, [eatMeat, meat]);
 
   useEffect(() => {
     if (meat <= 0) {
@@ -73,9 +70,11 @@ const Game: FC<IGameProps> = ({ onGameOver }) => {
       return;
     }
 
+    // TODO: Utiliser le store pour
+
     // Sinon, on consomme le bois et on reconstruit le tableau
-    setWood(wood - 5);
-    setPopulation(population + 2);
+    buildCaban(wood);
+    increasePopulation(population);
     setCells((prev) =>
       prev.map((row) => row.map((cell) => (cell.id === cellId ? { ...cell, type: CellType.HOUSE } : cell)))
     );
@@ -84,7 +83,7 @@ const Game: FC<IGameProps> = ({ onGameOver }) => {
   return (
     <div className="w-full h-full flex flex-col justify-start items-center bg-gray-500 p-2">
       <div className="flex items-start w-full gap-2">
-        <ResourcePanel survivor={survivor} population={population} meat={meat} wood={wood} stone={stone} />
+        <ResourcePanel />
         <QuestList quests={quests} onValidateQuest={onValidateQuest} />
       </div>
       <Map cells={cells} onUpdateCell={handleUpdateCell} />

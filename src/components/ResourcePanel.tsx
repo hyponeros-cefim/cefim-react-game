@@ -2,22 +2,16 @@ import SurvivorIcon from '../assets/icons/survivor.svg';
 import MeatIcon from '../assets/icons/meat.svg';
 import WoodIcon from '../assets/icons/wood.svg';
 import StoneIcon from '../assets/icons/stone.svg';
-import type { FC } from 'react';
+import { useResources } from '../Store/useResources';
 
 const StyleResource = {
   li: 'flex items-center gap-2',
   p: 'text-white text-3xl font-bold bg-gray-800 rounded-2xl  pt-0.5 pb-1 px-4',
 };
 
-interface ResourcePanelProps {
-  survivor: number;
-  population: number;
-  meat: number;
-  wood: number;
-  stone: number;
-}
+const ResourcePanel = () => {
+  const { survivor, population, meat, stone, wood } = useResources();
 
-const ResourcePanel: FC<ResourcePanelProps> = ({ survivor, population, meat, wood, stone }) => {
   return (
     <div className="bg-gray-800 border-gray-700 p-4 w-full  ">
       <ul className="flex items-center bg-gray-600 p-4 rounded-2xl border-2 border-gray-700 gap-8">

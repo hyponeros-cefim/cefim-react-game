@@ -17,10 +17,7 @@ const LeaderBoard = () => {
       name,
       score: 0,
     };
-    console.log('🏷️ ~ LeaderBoad.tsx:20 ~ newPlayer : ', newPlayer.name);
-
     setPlayers([...players, newPlayer]);
-    console.log('🏷️ ~ LeaderBoad.tsx:25 ~ players : ', players);
   };
 
   return (
