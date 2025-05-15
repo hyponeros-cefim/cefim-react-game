@@ -7,9 +7,3 @@ export default defineConfig({
   base: '/cefim-react-game/', // Mettre le nom du dépôt GitHub ici
   plugins: [react(), tailwindcss()],
 });
-
-// Installer path et :
-// resolve: {
-//   alias: {
-//     '@': path.resolve(__dirname, 'src'),
-//   },
