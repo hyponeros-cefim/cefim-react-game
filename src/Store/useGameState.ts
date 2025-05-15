@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 interface IGameState {
   // états initiaux
-  survivor: number;
+  worker: number;
   population: number;
   meat: number;
   wood: number;
@@ -10,21 +10,25 @@ interface IGameState {
   time: number;
 
   // getters
-  getCheckMeat: () => boolean;
+  checkMeat: () => boolean;
 
   // setters
-  // setTime: () => void;
-  setTime: (val: number) => void;
-  increasePopulation: () => void;
-  eatMeat: () => void;
+  setWorker: (worker: number) => void;
+  setPopulation: (population: number) => void;
+  setWood: (wood: number) => void;
+  setStone: (stone: number) => void;
+  setMeat: (meat: number) => void;
+
+  // actions
+  addTime: () => void;
   buildCaban: () => void;
-  setSurvivor: () => void;
-  setStone: () => void;
+  eatMeat: () => void;
+  increasePopulation: (population: number) => number;
 }
 
 export const useGameState = create<IGameState>((set, get) => ({
   // états initiaux
-  survivor: 0,
+  worker: 0,
   population: 0,
   meat: 20,
   wood: 17,
@@ -32,22 +36,36 @@ export const useGameState = create<IGameState>((set, get) => ({
   time: 0,
 
   // getters
-  getCheckMeat: () => get().meat > 0,
+  checkMeat: () => get().meat > 0,
 
   // setters
-  // setTime: () => set(() => ({ time: get().time + 1 })),
-  setTime: (val: number) => set((state) => ({ time: state.time + val })),
-  increasePopulation: () => set(() => ({ population: get().population + 2 })),
+  setWorker: (worker) => set({ worker }),
+  setPopulation: (population) => set({ population }),
+  setMeat: (meat) => set({ meat }),
+  setWood: (wood) => set({ wood }),
+  setStone: (stone) => set({ stone }),
+
+  // actions
+  addTime: () => set(() => ({ time: get().time + 1 })),
+  increasePopulation: (population) => population + 2,
   eatMeat: () =>
     set(() => {
-      const canEat = get().getCheckMeat();
+      const canEat = get().checkMeat();
       const population = get().population;
       const meat = get().meat;
       return {
         meat: canEat ? meat - (population > 0 ? 1 * population : 0) : meat,
       };
     }),
-  buildCaban: () => set(() => ({ wood: get().wood - 5 })),
-  setSurvivor: () => set(() => ({ survivor: get().survivor })),
-  setStone: () => set(() => ({ stone: get().stone })),
+  buildCaban: () => {
+    const { wood, population } = get();
+    const increasePopulation = get().increasePopulation;
+
+    set(() => {
+      return {
+        wood: wood - 5,
+        population: increasePopulation(population),
+      };
+    });
+  },
 }));

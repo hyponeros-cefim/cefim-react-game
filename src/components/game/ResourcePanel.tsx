@@ -10,14 +10,14 @@ const StyleResource = {
 };
 
 const ResourcePanel = () => {
-  const { survivor, population, meat, stone, wood } = useGameState();
+  const { worker, population, meat, stone, wood } = useGameState();
 
   return (
     <div className="bg-gray-800 border-gray-700 p-4 w-full  ">
       <ul className="flex items-center bg-gray-600 p-4 rounded-2xl border-2 border-gray-700 gap-8">
         <li className={StyleResource.li}>
           <img className="w-16" src={SurvivorIcon} alt="Survivor Icon" />
-          <p className={StyleResource.p}>{`${survivor}/${population}`}</p>
+          <p className={StyleResource.p}>{`${worker}/${population}`}</p>
         </li>
         <li className={StyleResource.li}>
           <img className="w-16" src={MeatIcon} alt="Meat Icon" />
