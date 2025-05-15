@@ -1,8 +1,8 @@
-import SurvivorIcon from '../../assets/icons/survivor.svg';
-import MeatIcon from '../../assets/icons/meat.svg';
-import WoodIcon from '../../assets/icons/wood.svg';
-import StoneIcon from '../../assets/icons/stone.svg';
-import { useGameState } from '../../Store/useGameState';
+import SurvivorIcon from '../assets/icons/survivor.svg';
+import MeatIcon from '../assets/icons/meat.svg';
+import WoodIcon from '../assets/icons/wood.svg';
+import StoneIcon from '../assets/icons/stone.svg';
+import { useGameState } from '../Store/useGameState';
 
 const StyleResource = {
   li: 'flex items-center gap-2',
@@ -10,7 +10,8 @@ const StyleResource = {
 };
 
 const ResourcePanel = () => {
-  const { worker, population, meat, stone, wood } = useGameState();
+  const { population, meat, stone, wood } = useGameState();
+  const worker = useGameState((state) => state.getWorkerAvailable());
 
   return (
     <div className="bg-gray-800 border-gray-700 p-4 w-full  ">

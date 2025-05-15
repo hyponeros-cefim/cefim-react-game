@@ -1,20 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useGameState } from '../Store/useGameState';
-import { useQuests } from '../Store/useQuests';
-import { CellType, type ICell } from '../components/game/types/IMap';
+import { CellType, type ICell } from '../components/types/IMap';
 import { cellList } from '../data/cellList';
-import ResourcePanel from '../components/game/ResourcePanel';
-import QuestList from '../components/game/QuestList';
-import Map from '../components/game/Map';
 import { useNavigate } from 'react-router-dom';
 import { EPages } from './types/Epages.enum';
+import ResourcePanel from '../components/ResourcePanel';
+import QuestList from '../components/QuestList';
+import Map from '../components/Map';
 
 const Game = () => {
   // states
-  const { meat, wood } = useGameState();
+  const { meat, wood, quests } = useGameState();
   // actions
-  const { eatMeat, buildCaban, addTime } = useGameState();
-  const { questList, setQuests } = useQuests();
+  const { eatMeat, buildCaban, addTime, updateQuests } = useGameState();
 
   const [cells, setCells] = useState<ICell[][]>(cellList);
 
@@ -37,8 +35,7 @@ const Game = () => {
   }, [meat, navigate]);
 
   const onValidateQuest = (id: number) => {
-    const prevQuests = questList.map((quest) => (quest.id === id ? { ...quest, state: !quest.state } : quest));
-    setQuests(prevQuests);
+    updateQuests(id);
   };
 
   const handleUpdateCell = (cellId: number) => {
@@ -70,7 +67,7 @@ const Game = () => {
     <div className="w-full h-full flex flex-col justify-start items-center bg-gray-500 p-2">
       <div className="flex items-start w-full gap-2">
         <ResourcePanel />
-        <QuestList quests={questList} onValidateQuest={onValidateQuest} />
+        <QuestList quests={quests} onValidateQuest={onValidateQuest} />
       </div>
       <Map cells={cells} onUpdateCell={handleUpdateCell} />
     </div>

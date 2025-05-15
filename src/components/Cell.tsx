@@ -1,6 +1,6 @@
 import type { FC } from 'react';
-import CabinIcon from '../../assets/icons/cabin.svg';
-import ForestIcon from '../../assets/icons/shed.svg';
+import CabinIcon from '../assets/icons/cabin.svg';
+import ForestIcon from '../assets/icons/shed.svg';
 import { CellType, type ICell } from './types/IMap';
 
 interface MapProps {

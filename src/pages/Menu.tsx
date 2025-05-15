@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import shedIcon from '../assets/icons/shed.svg';
+import shedIcon from '../assets/icons/cabin.svg';
 import { Link } from 'react-router-dom';
 import { EPages } from './types/Epages.enum';
 
