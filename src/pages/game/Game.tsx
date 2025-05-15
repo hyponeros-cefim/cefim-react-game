@@ -1,11 +1,11 @@
 import { useEffect, useState, type FC } from 'react';
-import ResourcePanel from './ResourcePanel';
-import { CellType, type ICell } from './types/IMap';
-import { cellList } from '../../data/cellList';
-import QuestList from './QuestList';
-import Map from './Map';
-import { useQuests } from '../../Store/useQuests';
 import { useGameState } from '../../Store/useGameState';
+import { useQuests } from '../../Store/useQuests';
+import { CellType, type ICell } from '../../components/game/types/IMap';
+import { cellList } from '../../data/cellList';
+import ResourcePanel from '../../components/game/ResourcePanel';
+import QuestList from '../../components/game/QuestList';
+import Map from '../../components/game/Map';
 
 interface IGameProps {
   onGameOver: () => void;
