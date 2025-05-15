@@ -1,42 +1,40 @@
-import { useEffect, useState, type FC } from 'react';
-import { useGameState } from '../../Store/useGameState';
-import { useQuests } from '../../Store/useQuests';
-import { CellType, type ICell } from '../../components/game/types/IMap';
-import { cellList } from '../../data/cellList';
-import ResourcePanel from '../../components/game/ResourcePanel';
-import QuestList from '../../components/game/QuestList';
-import Map from '../../components/game/Map';
+import { useEffect, useState } from 'react';
+import { useGameState } from '../Store/useGameState';
+import { useQuests } from '../Store/useQuests';
+import { CellType, type ICell } from '../components/game/types/IMap';
+import { cellList } from '../data/cellList';
+import ResourcePanel from '../components/game/ResourcePanel';
+import QuestList from '../components/game/QuestList';
+import Map from '../components/game/Map';
+import { useNavigate } from 'react-router-dom';
+import { EPages } from './types/Epages.enum';
 
-interface IGameProps {
-  onGameOver: () => void;
-}
-
-const Game: FC<IGameProps> = ({ onGameOver }) => {
+const Game = () => {
   // states
   const { meat, wood } = useGameState();
   // actions
-  const { eatMeat, increasePopulation, buildCaban, setTime } = useGameState();
+  const { eatMeat, buildCaban, addTime } = useGameState();
   const { questList, setQuests } = useQuests();
 
   const [cells, setCells] = useState<ICell[][]>(cellList);
 
-  // TODO: A voir pour mettre le calcul le store dans une méthode increasePopulation, increaseTime, decreaseMeat, decreaseWood ??
+  const navigate = useNavigate();
+
   useEffect(() => {
     const interval = setInterval(() => {
-      setTime(1); // Incrémente le temps
+      addTime(); // Incrémente le temps de 1
       eatMeat(); // Empêche meat de devenir négatif
     }, 1000);
-
     return () => clearInterval(interval);
-  }, [eatMeat, setTime]);
+  }, [eatMeat, addTime]);
 
   useEffect(() => {
     if (meat <= 0) {
       // Appelle une fonction ou déclenche une alerte
       alert("Il n'y a plus de nourriture ! La partie est terminée !");
-      onGameOver();
+      navigate(`/${EPages.LEADERBOARD}`);
     }
-  }, [meat, onGameOver]);
+  }, [meat, navigate]);
 
   const onValidateQuest = (id: number) => {
     const prevQuests = questList.map((quest) => (quest.id === id ? { ...quest, state: !quest.state } : quest));
@@ -63,8 +61,6 @@ const Game: FC<IGameProps> = ({ onGameOver }) => {
 
     // Sinon, on consomme le bois et on reconstruit le tableau
     buildCaban();
-    // increasePopulation(population);
-    increasePopulation();
     setCells((prev) =>
       prev.map((row) => row.map((cell) => (cell.id === cellId ? { ...cell, type: CellType.HOUSE } : cell)))
     );

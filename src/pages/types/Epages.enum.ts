@@ -1,5 +1,5 @@
-export enum EAppStatus {
-  MENU = 'menu',
+export enum EPages {
+  MENU = '/',
   GAME = 'game',
   LEADERBOARD = 'leaderboard',
 }

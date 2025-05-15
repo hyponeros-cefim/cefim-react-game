@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import skullIcon from '../../assets/icons/skull.svg';
+import skullIcon from '../assets/icons/skull.svg';
 import type IPlayer from './types/Iplayers';
 
 const style = {

@@ -1,12 +1,13 @@
 import type { FC } from 'react';
-import shedIcon from '../../assets/icons/shed.svg';
+import shedIcon from '../assets/icons/shed.svg';
+import { Link } from 'react-router-dom';
+import { EPages } from './types/Epages.enum';
 
 interface MenuProps {
   version: string;
-  onPlay: () => void;
 }
 
-const Menu: FC<MenuProps> = ({ version, onPlay }) => {
+const Menu: FC<MenuProps> = ({ version }) => {
   const sentences = [
     'Seuls les plus malins survivront. ',
     'Bâtissez. Luttez. Survivez.',
@@ -24,9 +25,9 @@ const Menu: FC<MenuProps> = ({ version, onPlay }) => {
       <h1 className="text-white font-bold text-6xl">Survive React</h1>
       <h2 className="rotate-5 ml-16 mb-8 text-white animate-pulse">{subtitle}</h2>
       <div className="flex flex-col items-stretch max-w-md gap-2 my-4">
-        <button className="bg-white rounded px-4 py-2 w-32 cursor-pointer" onClick={onPlay}>
+        <Link className="bg-white rounded px-4 py-2 w-32 text-center " to={EPages.GAME}>
           Play
-        </button>
+        </Link>
         <button className="bg-white rounded px-4 py-2 w-32 cursor-pointer" onClick={handleClick}>
           Credits
         </button>
