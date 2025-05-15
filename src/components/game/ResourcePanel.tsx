@@ -2,7 +2,7 @@ import SurvivorIcon from '../../assets/icons/survivor.svg';
 import MeatIcon from '../../assets/icons/meat.svg';
 import WoodIcon from '../../assets/icons/wood.svg';
 import StoneIcon from '../../assets/icons/stone.svg';
-import { useResources } from '../../Store/useResources';
+import { useGameState } from '../../Store/useGameState';
 
 const StyleResource = {
   li: 'flex items-center gap-2',
@@ -10,7 +10,7 @@ const StyleResource = {
 };
 
 const ResourcePanel = () => {
-  const { survivor, population, meat, stone, wood } = useResources();
+  const { survivor, population, meat, stone, wood } = useGameState();
 
   return (
     <div className="bg-gray-800 border-gray-700 p-4 w-full  ">
