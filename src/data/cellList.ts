@@ -1,4 +1,4 @@
-import { CellType, type ICell } from '../components/types/IMap';
+import { CellType, type ICell } from '../components/game/types/IMap';
 
 const row1: ICell[] = [
   {

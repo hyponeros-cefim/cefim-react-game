@@ -1,6 +1,6 @@
 import type { FC } from 'react';
-import type { ICell } from './types/IMap';
 import Cell from './Cell';
+import type { ICell } from './types/IMap';
 
 interface MapProps {
   cells: ICell[][];

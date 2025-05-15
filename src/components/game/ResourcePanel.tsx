@@ -1,8 +1,8 @@
-import SurvivorIcon from '../assets/icons/survivor.svg';
-import MeatIcon from '../assets/icons/meat.svg';
-import WoodIcon from '../assets/icons/wood.svg';
-import StoneIcon from '../assets/icons/stone.svg';
-import { useResources } from '../Store/useResources';
+import SurvivorIcon from '../../assets/icons/survivor.svg';
+import MeatIcon from '../../assets/icons/meat.svg';
+import WoodIcon from '../../assets/icons/wood.svg';
+import StoneIcon from '../../assets/icons/stone.svg';
+import { useResources } from '../../Store/useResources';
 
 const StyleResource = {
   li: 'flex items-center gap-2',

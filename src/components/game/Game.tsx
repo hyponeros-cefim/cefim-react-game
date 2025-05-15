@@ -1,43 +1,44 @@
 import { useEffect, useRef, useState, type FC } from 'react';
 import ResourcePanel from './ResourcePanel';
-import QuestList from './QuestList';
 import type { IQuest } from './types/IQuestList';
 import { CellType, type ICell } from './types/IMap';
+import { cellList } from '../../data/cellList';
+import { questList } from '../../data/questList';
+import { useResources } from '../../Store/useResources';
+import QuestList from './QuestList';
 import Map from './Map';
-import { cellList } from '../data/cellList';
-import { questList } from '../data/questList';
-import { useResources } from '../Store/useResources';
 
 interface IGameProps {
   onGameOver: () => void;
 }
 
 const Game: FC<IGameProps> = ({ onGameOver }) => {
-  const { meat, eatMeat, population, increasePopulation, wood, buildCaban } = useResources();
+  const { meat, eatMeat, population, increasePopulation, wood, buildCaban, setTime, time } = useResources();
 
   const [quests, setQuests] = useState<IQuest[]>(questList);
   const [cells, setCells] = useState<ICell[][]>(cellList);
-  const [time, setTime] = useState(0);
 
   // Créer une ref de population pour éviter les re-renders
   const populationRef = useRef(population);
   const meatRef = useRef(meat);
+  const timeRef = useRef(time);
 
   //A chaque mise à jour de population, on met à jour la ref
   useEffect(() => {
     populationRef.current = population;
     meatRef.current = meat;
-  }, [population, meat]);
+    timeRef.current = time;
+  }, [population, meat, time]);
 
   // TODO: A voir pour mettre le calcul le store dans une méthode increasePopulation, increaseTime, decreaseMeat, decreaseWood ??
   useEffect(() => {
     const interval = setInterval(() => {
-      setTime((prevTime) => prevTime + 1); // Incrémente le temps
-      eatMeat(meat); // Empêche meat de devenir négatif
-    }, 1000);
+      setTime(timeRef.current); // Incrémente le temps
+      eatMeat(meatRef.current); // Empêche meat de devenir négatif
+    }, 5000);
 
     return () => clearInterval(interval);
-  }, [eatMeat, meat]);
+  }, [eatMeat, setTime]);
 
   useEffect(() => {
     if (meat <= 0) {
@@ -53,7 +54,7 @@ const Game: FC<IGameProps> = ({ onGameOver }) => {
   };
 
   const handleUpdateCell = (cellId: number) => {
-    /// Recherche de la cellule cliquée
+    // Recherche de la cellule cliquée
     const clickedCell = cells.flat().find((cell) => cell.id === cellId);
     if (!clickedCell) {
       return;
@@ -69,8 +70,6 @@ const Game: FC<IGameProps> = ({ onGameOver }) => {
       console.log('Pas assez de bois pour construire !');
       return;
     }
-
-    // TODO: Utiliser le store pour
 
     // Sinon, on consomme le bois et on reconstruit le tableau
     buildCaban(wood);

@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import Menu from './components/Menu';
-import Game from './components/Game';
+import Menu from './components/menu/Menu';
+import Game from './components/game/Game';
 import { EAppStatus } from './components/types/AppStatus.enum';
-import LeaderBoard from './components/LeaderBoad';
+import LeaderBoard from './components/game-over/LeaderBoad';
 
 function App() {
   const [status, setStatus] = useState(EAppStatus.MENU);

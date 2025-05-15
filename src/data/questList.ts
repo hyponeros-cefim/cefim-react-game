@@ -1,4 +1,4 @@
-import type { IQuest } from '../components/types/IQuestList';
+import type { IQuest } from '../components/game/types/IQuestList';
 
 export const questList: IQuest[] = [
   { id: 1, state: true, name: 'Une bonne nuit de sommeil', description: 'Description of Quest 1' },
