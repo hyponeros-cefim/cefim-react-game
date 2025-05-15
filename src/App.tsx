@@ -8,7 +8,7 @@ function App() {
   const version = '0.0.1';
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/cefim-react-game/">
       <Routes>
         <Route path={EPages.MENU} element={<Menu version={version} />} />
         <Route path={EPages.GAME} element={<Game />} />
