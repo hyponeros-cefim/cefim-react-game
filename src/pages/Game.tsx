@@ -18,7 +18,7 @@ const Game = () => {
     const interval = setInterval(() => {
       addTime(); // Incrémente le temps de 1
       eatMeat(); // Empêche meat de devenir négatif
-    }, 1000);
+    }, 10000);
     return () => clearInterval(interval);
   }, [eatMeat, addTime]);
 

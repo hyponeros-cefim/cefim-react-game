@@ -26,12 +26,13 @@ interface IGameState {
 
   // actions
   addTime: () => void;
-  buildCaban: () => void;
+  buildCaban: (id: number) => void;
   eatMeat: () => void;
   increasePopulation: (population: number) => number;
   updateQuests: (id: number) => void;
   updateCellType: (cellId: number) => void;
   reset: () => void;
+  affectWorker: (id: number) => void;
 }
 
 export const useGameState = create<IGameState>((set, get) => ({
@@ -69,14 +70,23 @@ export const useGameState = create<IGameState>((set, get) => ({
         meat: canEat ? meat - (population > 0 ? 1 * population : 0) : meat,
       };
     }),
-  buildCaban: () => {
-    const { wood, population } = get();
+  buildCaban: (id: number) => {
+    const { cells, wood, population } = get();
     const increasePopulation = get().increasePopulation;
 
     set(() => {
       return {
         wood: wood - 5,
         population: increasePopulation(population),
+        cells: cells.map((row) => row.map((cell) => (cell.id === id ? { ...cell, type: CellType.HOUSE } : cell))),
+      };
+    });
+  },
+  affectWorker: (id: number) => {
+    set(() => {
+      const { cells } = get();
+      return {
+        cells: cells.map((row) => row.map((cell) => (cell.id === id ? { ...cell, worker: cell.worker + 1 } : cell))),
       };
     });
   },
@@ -91,21 +101,22 @@ export const useGameState = create<IGameState>((set, get) => ({
 
     // Si déjà occupée, on ne fait rien
     if (clickedCell.type !== CellType.EMPTY) {
+      const availableWorker = get().getAvailableWorker();
+      if (clickedCell.type === CellType.FOREST && availableWorker > 0) {
+        get().affectWorker(cellId);
+      }
       return;
     }
+
+    // Affectation d'un worker à une cellule
 
     // Si pas assez de bois, on ne fait rien
     if (get().wood < 5) {
       console.log('Pas assez de bois pour construire !');
       return;
     }
-    get().buildCaban();
-    set(() => {
-      const { cells } = get();
-      return {
-        cells: cells.map((row) => row.map((cell) => (cell.id === cellId ? { ...cell, type: CellType.HOUSE } : cell))),
-      };
-    });
+
+    get().buildCaban(cellId);
   },
   reset: () => {
     set(() => ({
