@@ -31,6 +31,7 @@ interface IGameState {
   increasePopulation: (population: number) => number;
   updateQuests: (id: number) => void;
   updateCellType: (cellId: number) => void;
+  reset: () => void;
 }
 
 export const useGameState = create<IGameState>((set, get) => ({
@@ -40,7 +41,7 @@ export const useGameState = create<IGameState>((set, get) => ({
   wood: 17,
   stone: 0,
   time: 0,
-  quests: questList,
+  quests: [...questList], // faire une copie de questList pour éviter les références directes
   cells: [...cellList], // faire une copie de cellList pour éviter les références directes
 
   // getters
@@ -57,7 +58,6 @@ export const useGameState = create<IGameState>((set, get) => ({
   setStone: (stone) => set({ stone }),
 
   // actions
-  reset: () => {}, //TODO: implémenter la fonction de reset
   addTime: () => set(() => ({ time: get().time + 1 })),
   increasePopulation: (population) => population + 2,
   eatMeat: () =>
@@ -107,15 +107,26 @@ export const useGameState = create<IGameState>((set, get) => ({
       };
     });
   },
-  // TODO: Ajouter le passage de time à leaderboard pour faire l'affichage du tableau des scores
-  // TODO: Utiliser persist pour stocker les scores d'une partie à l'autre
-  // TODO: Ajouter un bouton pour le retour au menu principal ou pour rejouer
-  // TODO: Ajouter le reset du jeu dans le cas où on rejoue ou que l'on revienne au menu principal
-  // TODO: Faire en sorte que le timer se reset également lorsqu'on revient au menu principal ou qu'on rejoue
-  // TODO: Masquer le formulaire du score dès validations et affichage du tableau des scores et des boutons de retour au jeu / menu
+  reset: () => {
+    set(() => ({
+      population: 0,
+      meat: 20,
+      wood: 17,
+      stone: 0,
+      time: 0,
+      quests: [...questList],
+      cells: [...cellList],
+    }));
+  },
+  // Ajouter le passage de time à leaderboard pour faire l'affichage du tableau des scores
+  //  Ajouter un bouton pour le retour au menu principal ou pour rejouer
+  //  Ajouter le reset du jeu dans le cas où on rejoue ou que l'on revienne au menu principal
+  //  Faire en sorte que le timer se reset également lorsqu'on revient au menu principal ou qu'on rejoue
+  //  Masquer le formulaire du score dès validations et affichage du tableau des scores et des boutons de retour au jeu / menu
   // TODO: Affecter un ouvrier à une forêt et ajouter la logique de récolte de bois
   // TODO: Compter le nombre de workers sur la carte pour déterminer le nomnbre de survivants sans activités
   // TODO: Limiter l'affectation des workers sur la carte au nombre restant de workers disponibles
+  // TODO: Utiliser persist pour stocker les scores d'une partie à l'autre
 
   updateQuests: (id) => {
     const { quests } = get();

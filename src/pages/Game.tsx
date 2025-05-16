@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useGameState } from '../Store/useGameState';
 import { useNavigate } from 'react-router-dom';
-import { EPages } from './types/Epages.enum';
+import { EPages } from './types/EPages.enum';
 import ResourcePanel from '../components/ResourcePanel';
 import QuestList from '../components/QuestList';
 import Map from '../components/Map';
@@ -10,7 +10,7 @@ const Game = () => {
   // states
   const { meat, quests } = useGameState();
   // actions
-  const { eatMeat, addTime, updateQuests, updateCellType } = useGameState();
+  const { eatMeat, addTime, updateQuests, updateCellType, reset } = useGameState();
 
   const navigate = useNavigate();
 
@@ -28,7 +28,7 @@ const Game = () => {
       alert("Il n'y a plus de nourriture ! La partie est terminée !");
       navigate(`/${EPages.LEADERBOARD}`);
     }
-  }, [meat, navigate]);
+  }, [meat, navigate, reset]);
 
   const onValidateQuest = (id: number) => {
     updateQuests(id);

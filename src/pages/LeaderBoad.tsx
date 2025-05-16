@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import skullIcon from '../assets/icons/skull.svg';
 import type IPlayer from './types/Iplayers';
+import { useGameState } from '../Store/useGameState';
+import { Link } from 'react-router-dom';
+import { EPages } from './types/EPages.enum';
 
 const style = {
   input:
@@ -12,45 +15,76 @@ const style = {
 };
 
 const LeaderBoard = () => {
+  const { time, reset } = useGameState();
+
   const [name, setName] = useState('');
-  const [players, setPlayers] = useState<IPlayer[]>([]);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [players, setPlayers] = useState<IPlayer[]>([
+    { name: 'Michel', score: 94 },
+    { name: 'Jean', score: 72 },
+    { name: 'Pierre', score: 11 },
+  ]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const newPlayer: IPlayer = {
       name,
-      score: 0,
+      score: time,
     };
+    setIsSubmitted(true);
     setPlayers([...players, newPlayer]);
   };
+
+  const handleReset = () => {
+    reset();
+  };
+
+  const playersOrder = players.sort((a, b) => b.score - a.score).slice(0, 5);
 
   return (
     <div className="w-full h-full flex flex-col justify-center items-center bg-gray-600">
       <img className="w-16" src={skullIcon} alt="Skull Icon" />
       <h1 className="text-white font-bold text-6xl">Game Over</h1>
       <h2 className=" mb-8 text-white">Leaderboard</h2>
-
-      <form onSubmit={handleSubmit} className=" flex justify-between items-center mb-8">
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => {
-            setName(e.target.value);
-          }}
-          placeholder="Jean Michel"
-          className={style.input}
-        />
-        <button type="submit" disabled={name.length < 3} className={style.button}>
-          Envoyer
-        </button>
-      </form>
-
+      {!isSubmitted ? (
+        <form onSubmit={handleSubmit} className=" flex justify-between items-center mb-8">
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+            placeholder="Jean Michel"
+            className={style.input}
+          />
+          <button type="submit" disabled={name.length < 3} className={style.button}>
+            Envoyer
+          </button>
+        </form>
+      ) : (
+        <div className="flex  gap-2 items-center mb-8">
+          <Link
+            className="bg-gray-900 text-white font-bold rounded px-4 py-2 w-32 text-center hover:bg-gray-800 "
+            to={EPages.GAME}
+            onClick={handleReset}>
+            Play again
+          </Link>
+          <Link
+            className="border border-gray-300 rounded px-4 py-2 w-auto text-gray-300 text-center bg-transparent hover:border-white hover:text-white transition-colors"
+            to={EPages.MENU}
+            onClick={handleReset}>
+            Back to menu
+          </Link>
+        </div>
+      )}
       <ul className={style.ul}>
-        {players &&
-          players.length > 0 &&
-          players.map((player, index) => (
+        {playersOrder &&
+          playersOrder.length > 0 &&
+          playersOrder.map((player, index) => (
             <li key={index} aria-current="true" className={style.li}>
-              <p className="text-lg font-bold">{player.name}</p>
+              <p className="text-lg font-bold">
+                <i>{index + 1}</i> - <b>{player.name}</b>
+              </p>
               <p>Score: {player.score}</p>
             </li>
           ))}

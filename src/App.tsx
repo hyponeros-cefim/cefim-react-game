@@ -2,7 +2,7 @@ import Menu from './pages/Menu';
 import LeaderBoard from './pages/LeaderBoad';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Game from './pages/Game';
-import { EPages } from './pages/types/Epages.enum';
+import { EPages } from './pages/types/EPages.enum';
 
 function App() {
   const version = '0.0.1';
