@@ -1,16 +1,19 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useGameState } from '../Store/useGameState';
 import { useNavigate } from 'react-router-dom';
 import { EPages } from './types/EPages.enum';
 import ResourcePanel from '../components/ResourcePanel';
 import QuestList from '../components/QuestList';
 import Map from '../components/Map';
+import { SeasonDialog } from '../components/SeasonDialog';
 
 const Game = () => {
   // states
-  const { meat, quests } = useGameState();
+  const { meat, quests, time, season } = useGameState();
   // actions
-  const { eatMeat, addTime, updateQuests, updateCellType, reset } = useGameState();
+  const { eatMeat, addTime, updateQuests, updateCellType, reset, changeSeason } = useGameState();
+
+  const [isOpen, setIsOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -18,7 +21,7 @@ const Game = () => {
     const interval = setInterval(() => {
       addTime(); // Incrémente le temps de 1
       eatMeat(); // Empêche meat de devenir négatif
-    }, 10000);
+    }, 1_000);
     return () => clearInterval(interval);
   }, [eatMeat, addTime]);
 
@@ -28,7 +31,11 @@ const Game = () => {
       alert("Il n'y a plus de nourriture ! La partie est terminée !");
       navigate(`/${EPages.LEADERBOARD}`);
     }
-  }, [meat, navigate, reset]);
+    if (time % 5 === 0 && time > 0) {
+      changeSeason();
+      setIsOpen(true);
+    }
+  }, [meat, navigate, reset, changeSeason, time]);
 
   const onValidateQuest = (id: number) => {
     updateQuests(id);
@@ -38,6 +45,10 @@ const Game = () => {
     updateCellType(cellId);
   };
 
+  const handleDialogOpenChange = (open: boolean) => {
+    setIsOpen(open);
+  };
+
   return (
     <div className="w-full h-full flex flex-col justify-start items-center bg-gray-500 p-2">
       <div className="flex items-start w-full gap-2">
@@ -45,6 +56,7 @@ const Game = () => {
         <QuestList quests={quests} onValidateQuest={onValidateQuest} />
       </div>
       <Map onUpdateCell={handleUpdateCell} />
+      <SeasonDialog season={season} openDialog={isOpen} onOpenChange={handleDialogOpenChange} />
     </div>
   );
 };

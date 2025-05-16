@@ -4,6 +4,11 @@ import type { IQuest } from '../components/types/IQuestList';
 import { cellList } from '../data/cellList';
 import { CellType, type ICell } from '../components/types/IMap';
 
+export enum ESeason {
+  WINTER = 'winter',
+  SUMMER = 'summer',
+}
+
 interface IGameState {
   // états initiaux
   population: number; // TODO: supprimer worker et créer un getter worker qui se mettra à jour en fonction de l'attribution des survivants sur la carte
@@ -13,6 +18,7 @@ interface IGameState {
   time: number;
   quests: IQuest[];
   cells: ICell[][];
+  season: ESeason;
 
   // getters
   checkMeat: () => boolean;
@@ -33,6 +39,7 @@ interface IGameState {
   updateCellType: (cellId: number) => void;
   reset: () => void;
   affectWorker: (id: number) => void;
+  changeSeason: () => void;
 }
 
 export const useGameState = create<IGameState>((set, get) => ({
@@ -44,6 +51,7 @@ export const useGameState = create<IGameState>((set, get) => ({
   time: 0,
   quests: [...questList], // faire une copie de questList pour éviter les références directes
   cells: [...cellList], // faire une copie de cellList pour éviter les références directes
+  season: ESeason.SUMMER,
 
   // getters
   checkMeat: () => get().meat > 0,
@@ -123,6 +131,12 @@ export const useGameState = create<IGameState>((set, get) => ({
       time: 0,
       quests: [...questList],
       cells: [...cellList],
+      season: ESeason.SUMMER,
+    }));
+  },
+  changeSeason: () => {
+    set((state) => ({
+      season: state.season === ESeason.WINTER ? ESeason.SUMMER : ESeason.WINTER,
     }));
   },
   // Ajouter le passage de time à leaderboard pour faire l'affichage du tableau des scores
@@ -133,6 +147,10 @@ export const useGameState = create<IGameState>((set, get) => ({
   // TODO: Affecter un ouvrier à une forêt et ajouter la logique de récolte de bois
   // TODO: Compter le nombre de workers sur la carte pour déterminer le nomnbre de survivants sans activités
   // TODO: Limiter l'affectation des workers sur la carte au nombre restant de workers disponibles
+  // TODO: Faire en sorte qu'un worker dans une forêt récolte 1 bois et 1 nourriture toute les 5 secondes
+  // TODO: Ajouter un changement de saison toute les 20 secondes, en hiver la forêt ne produit plus de nourriture. A chaque changement de saison, on affiche une pop-up
+  // TODO:
+  // TODO:
   // TODO: Utiliser persist pour stocker les scores d'une partie à l'autre
 
   updateQuests: (id) => {
