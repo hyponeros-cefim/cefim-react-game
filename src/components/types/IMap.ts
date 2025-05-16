@@ -10,4 +10,5 @@ export interface ICell {
   type: CellType;
   x: number;
   y: number;
+  worker: number;
 }
