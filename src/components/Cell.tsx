@@ -1,6 +1,8 @@
 import type { FC } from 'react';
 import CabinIcon from '../assets/icons/cabin.svg';
-import ForestIcon from '../assets/icons/shed.svg';
+import Forest1Icon from '../assets/icons/tree.svg';
+import Forest2Icon from '../assets/icons/tree2.svg';
+import MountainIcon from '../assets/icons/mountain.svg';
 import { CellType, type ICell } from './types/IMap';
 
 interface MapProps {
@@ -11,7 +13,8 @@ interface MapProps {
 
 const icons: Record<string, string> = {
   [CellType.HOUSE]: CabinIcon,
-  [CellType.FOREST]: ForestIcon,
+  [CellType.FOREST]: Math.random() < 0.5 ? Forest1Icon : Forest2Icon,
+  [CellType.MOUNTAIN]: MountainIcon,
 };
 
 const cellStyle = 'relative flex justify-center items-center border-1  border-gray-500 hover:bg-gray-700';

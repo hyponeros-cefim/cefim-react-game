@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { questList } from '../data/questList';
 import type { IQuest } from '../components/types/IQuestList';
+import { cellList } from '../data/cellList';
+import { CellType, type ICell } from '../components/types/IMap';
 
 interface IGameState {
   // états initiaux
@@ -10,10 +12,11 @@ interface IGameState {
   stone: number;
   time: number;
   quests: IQuest[];
+  cells: ICell[][];
 
   // getters
   checkMeat: () => boolean;
-  getWorkerAvailable: () => number;
+  getAvailableWorker: () => number;
 
   // setters
   setPopulation: (population: number) => void;
@@ -27,6 +30,7 @@ interface IGameState {
   eatMeat: () => void;
   increasePopulation: (population: number) => number;
   updateQuests: (id: number) => void;
+  updateCellType: (cellId: number) => void;
 }
 
 export const useGameState = create<IGameState>((set, get) => ({
@@ -37,10 +41,11 @@ export const useGameState = create<IGameState>((set, get) => ({
   stone: 0,
   time: 0,
   quests: questList,
+  cells: [...cellList], // faire une copie de cellList pour éviter les références directes
 
   // getters
   checkMeat: () => get().meat > 0,
-  getWorkerAvailable: () => {
+  getAvailableWorker: () => {
     const { population } = get();
     return population;
   },
@@ -52,6 +57,7 @@ export const useGameState = create<IGameState>((set, get) => ({
   setStone: (stone) => set({ stone }),
 
   // actions
+  reset: () => {}, //TODO: implémenter la fonction de reset
   addTime: () => set(() => ({ time: get().time + 1 })),
   increasePopulation: (population) => population + 2,
   eatMeat: () =>
@@ -74,6 +80,43 @@ export const useGameState = create<IGameState>((set, get) => ({
       };
     });
   },
+  updateCellType: (cellId) => {
+    // Recherche de la cellule cliquée
+    const clickedCell = get()
+      .cells.flat()
+      .find((cell) => cell.id === cellId);
+    if (!clickedCell) {
+      return;
+    }
+
+    // Si déjà occupée, on ne fait rien
+    if (clickedCell.type !== CellType.EMPTY) {
+      return;
+    }
+
+    // Si pas assez de bois, on ne fait rien
+    if (get().wood < 5) {
+      console.log('Pas assez de bois pour construire !');
+      return;
+    }
+    get().buildCaban();
+    set(() => {
+      const { cells } = get();
+      return {
+        cells: cells.map((row) => row.map((cell) => (cell.id === cellId ? { ...cell, type: CellType.HOUSE } : cell))),
+      };
+    });
+  },
+  // TODO: Ajouter le passage de time à leaderboard pour faire l'affichage du tableau des scores
+  // TODO: Utiliser persist pour stocker les scores d'une partie à l'autre
+  // TODO: Ajouter un bouton pour le retour au menu principal ou pour rejouer
+  // TODO: Ajouter le reset du jeu dans le cas où on rejoue ou que l'on revienne au menu principal
+  // TODO: Faire en sorte que le timer se reset également lorsqu'on revient au menu principal ou qu'on rejoue
+  // TODO: Masquer le formulaire du score dès validations et affichage du tableau des scores et des boutons de retour au jeu / menu
+  // TODO: Affecter un ouvrier à une forêt et ajouter la logique de récolte de bois
+  // TODO: Compter le nombre de workers sur la carte pour déterminer le nomnbre de survivants sans activités
+  // TODO: Limiter l'affectation des workers sur la carte au nombre restant de workers disponibles
+
   updateQuests: (id) => {
     const { quests } = get();
     const prevQuests = quests.map((quest) => (quest.id === id ? { ...quest, state: !quest.state } : quest));

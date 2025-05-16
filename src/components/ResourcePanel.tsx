@@ -11,7 +11,7 @@ const StyleResource = {
 
 const ResourcePanel = () => {
   const { population, meat, stone, wood } = useGameState();
-  const worker = useGameState((state) => state.getWorkerAvailable());
+  const worker = useGameState((state) => state.getAvailableWorker());
 
   return (
     <div className="bg-gray-800 border-gray-700 p-4 w-full  ">

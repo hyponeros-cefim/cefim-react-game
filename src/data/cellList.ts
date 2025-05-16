@@ -3,13 +3,13 @@ import { CellType, type ICell } from '../components/types/IMap';
 const row1: ICell[] = [
   {
     id: 1,
-    type: CellType.EMPTY,
+    type: CellType.MOUNTAIN,
     x: 0,
     y: 0,
   },
   {
     id: 2,
-    type: CellType.EMPTY,
+    type: CellType.MOUNTAIN,
     x: 1,
     y: 0,
   },
@@ -35,13 +35,13 @@ const row1: ICell[] = [
 const row2: ICell[] = [
   {
     id: 6,
-    type: CellType.EMPTY,
+    type: CellType.FOREST,
     x: 0,
     y: 1,
   },
   {
     id: 7,
-    type: CellType.EMPTY,
+    type: CellType.FOREST,
     x: 1,
     y: 1,
   },
@@ -73,7 +73,7 @@ const row3: ICell[] = [
   },
   {
     id: 12,
-    type: CellType.EMPTY,
+    type: CellType.FOREST,
     x: 1,
     y: 2,
   },
@@ -117,13 +117,13 @@ const row4: ICell[] = [
   },
   {
     id: 19,
-    type: CellType.EMPTY,
+    type: CellType.MOUNTAIN,
     x: 3,
     y: 3,
   },
   {
     id: 20,
-    type: CellType.EMPTY,
+    type: CellType.FOREST,
     x: 4,
     y: 3,
   },
@@ -149,13 +149,13 @@ const row5: ICell[] = [
   },
   {
     id: 24,
-    type: CellType.EMPTY,
+    type: CellType.FOREST,
     x: 3,
     y: 4,
   },
   {
     id: 25,
-    type: CellType.EMPTY,
+    type: CellType.MOUNTAIN,
     x: 4,
     y: 4,
   },
