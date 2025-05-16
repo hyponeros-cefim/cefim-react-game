@@ -6,9 +6,4 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   base: '/cefim-react-game/', // Mettre le nom du dépôt GitHub ici
   plugins: [react(), tailwindcss()],
-  resolve: {
-    alias: {
-      '@': '/src',
-    },
-  },
 });
