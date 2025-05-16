@@ -33,7 +33,7 @@ const Game = () => {
     }
     if (time % 5 === 0 && time > 0) {
       changeSeason();
-      setIsOpen(true);
+      // setIsOpen(true); // TODO: ouverture de modale
     }
   }, [meat, navigate, reset, changeSeason, time]);
 
