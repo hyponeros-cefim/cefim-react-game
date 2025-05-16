@@ -11,8 +11,6 @@ const Map: FC<MapProps> = () => {
 
   const handleUpdateCell = (cellId: number) => {
     updateCellType(cellId);
-    const cell = cells.flat().find((cell) => cell.id === cellId);
-    console.log(cell?.worker);
   };
 
   return (

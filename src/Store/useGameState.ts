@@ -48,8 +48,12 @@ export const useGameState = create<IGameState>((set, get) => ({
   // getters
   checkMeat: () => get().meat > 0,
   getAvailableWorker: () => {
-    const { population } = get();
-    return population;
+    // TODO:prévoir de faire le contrôle selon le type de case
+    const { population, cells } = get();
+    // somme des workers déjà affectés
+    const assigned = cells.flat().reduce((total, cell) => total + (cell.worker ?? 0), 0);
+    // nombre de workers non affectés
+    return population - assigned;
   },
 
   // setters
@@ -83,40 +87,32 @@ export const useGameState = create<IGameState>((set, get) => ({
     });
   },
   affectWorker: (id: number) => {
+    const { cells } = get();
+
     set(() => {
-      const { cells } = get();
       return {
         cells: cells.map((row) => row.map((cell) => (cell.id === id ? { ...cell, worker: cell.worker + 1 } : cell))),
       };
     });
   },
   updateCellType: (cellId) => {
+    const { cells, wood, getAvailableWorker } = get();
+
     // Recherche de la cellule cliquée
-    const clickedCell = get()
-      .cells.flat()
-      .find((cell) => cell.id === cellId);
-    if (!clickedCell) {
+    const clickedCell = cells.flat().find((cell) => cell.id === cellId);
+    if (!clickedCell) return;
+
+    // 1) Si case vide et assez de bois → construire caban
+    if (clickedCell.type === CellType.EMPTY && wood >= 5) {
+      get().buildCaban(cellId);
       return;
     }
 
-    // Si déjà occupée, on ne fait rien
-    if (clickedCell.type !== CellType.EMPTY) {
-      const availableWorker = get().getAvailableWorker();
-      if (clickedCell.type === CellType.FOREST && availableWorker > 0) {
-        get().affectWorker(cellId);
-      }
+    // 2) Si FOREST et population > 0 → placer un worker
+    if (clickedCell.type === CellType.FOREST && getAvailableWorker() > 0) {
+      get().affectWorker(cellId);
       return;
     }
-
-    // Affectation d'un worker à une cellule
-
-    // Si pas assez de bois, on ne fait rien
-    if (get().wood < 5) {
-      console.log('Pas assez de bois pour construire !');
-      return;
-    }
-
-    get().buildCaban(cellId);
   },
   reset: () => {
     set(() => ({
@@ -145,3 +141,12 @@ export const useGameState = create<IGameState>((set, get) => ({
     set(() => ({ quests: prevQuests }));
   },
 }));
+
+// TODO:Mettre la condition pour l'assignation de la case selon le statut dans le handleUpdateCell soit updateCellType, addCellWorker
+// TODO:Afficher un span si worker > 0 sur la case en absolute
+// TODO:
+// TODO:
+// TODO:
+// TODO:
+// TODO:
+// TODO: Prévoir d'ajouter un menu pour chosir les actions
